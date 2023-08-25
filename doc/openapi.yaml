@@ -1,0 +1,208 @@
+openapi: 3.0.0
+info:
+  title: Assignment Week 10
+  version: 1.0.0
+  description: Latihan RBAC dengan Token Based Otentikasi dan Otorisasi Week 10
+servers:
+  - url: http://localhost:5000
+    description: Development Server
+components:
+  securitySchemes:
+    bearer:
+      type : http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'Bearer with JWT Token'
+      
+paths:
+    /auth/register: 
+      post :
+        summary: Register User Baru
+        requestBody :
+          content :
+            application/json :
+              schema : 
+                type : object
+                properties:
+                    username:
+                      type: string
+                    password:
+                      type: string
+                      minLength: 8
+                    role:
+                      type: string
+                required:
+                  - username
+        responses :
+          '200' :
+            description: User Created
+            content:
+              applicatin/json :
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type : string
+                    data:
+                      type: object
+                      properties:
+                        id :
+                          type : integer
+                        username:
+                          type: string
+                        role:
+                          type: string
+          '400' :
+            description: Bad Request
+            content:
+              applicatin/json :
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+    /auth/login:
+
+      post:
+        summary: Login User
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  password:
+                    type: string
+        responses:
+          '200':
+            description: Login Succes
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    data:
+                      type: string
+          '400' :
+            description: Bad Request
+            content:
+              applicatin/json :
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+    /transaction/{transferId}:
+      put:
+        security:
+          - bearer: []
+        summary: 'Get All Data Trasaction'
+        responses:
+          '200':
+            description: 'Get All Trasaction'
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          type:
+                            type: string
+                          author:
+                            type: string
+    /transaction:
+      get:
+        security:
+          - bearer: []
+        summary: 'Get All Data Trasaction'
+        responses:
+          '200':
+            description: 'Get All Trasaction'
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          type:
+                            type: string
+                          author:
+                            type: string
+                          status:
+                            type: string
+                            enum:
+                            - pending
+                            - approved
+                            - rejected
+                            - done
+    /transaction/add:
+      post:
+        summary: Register Transfer Baru
+        requestBody :
+          content :
+            application/json :
+              schema : 
+                type : object
+                properties:
+                    type:
+                      type: string
+                    author:
+                      type: string
+                    status:
+                      type: string
+                      enum:
+                        - pending
+                        - approved
+                        - rejected
+                        - done
+        responses :
+          '200' :
+            description: User Created
+            content:
+              applicatin/json :
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type : string
+                    data:
+                      type: object
+                      properties:
+                        id :
+                          type : integer
+                        username:
+                          type: string
+                        role:
+                          type: string
+          '400' :
+            description: Bad Request
+            content:
+              applicatin/json :
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+
+
+
